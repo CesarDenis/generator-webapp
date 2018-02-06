@@ -44,58 +44,72 @@ module.exports = class extends Generator {
 
   prompting() {
     if (!this.options['skip-welcome-message']) {
-      this.log(yosay('\'Allo \'allo! Out of the box I include HTML5 Boilerplate, jQuery, and a gulpfile to build your app.'));
+      this.log(
+        yosay(
+          "'Allo 'allo! Out of the box I include HTML5 Boilerplate, jQuery, and a gulpfile to build your app."
+        )
+      );
     }
 
-    const prompts = [{
-      type: 'checkbox',
-      name: 'features',
-      message: 'Which additional features would you like to include?',
-      choices: [{
-        name: 'Sass',
-        value: 'includeSass',
-        checked: true
-      }, {
-        name: 'Bootstrap',
-        value: 'includeBootstrap',
-        checked: true
-      }, {
-        name: 'Modernizr',
-        value: 'includeModernizr',
-        checked: true
-      }]
-    }, {
-      type: 'list',
-      name: 'legacyBootstrap',
-      message: 'Which version of Bootstrap would you like to include?',
-      choices: [{
-        name: 'Bootstrap 3',
-        value: true
-      }, {
-        name: 'Bootstrap 4',
-        value: false
-      }],
-      when: answers => answers.features.indexOf('includeBootstrap') !== -1
-    }, {
-      type: 'confirm',
-      name: 'includeJQuery',
-      message: 'Would you like to include jQuery?',
-      default: true,
-      when: answers => answers.features.indexOf('includeBootstrap') === -1
-    }];
+    const prompts = [
+      {
+        type: 'checkbox',
+        name: 'features',
+        message: 'Which additional features would you like to include?',
+        choices: [
+          {
+            name: 'Sass',
+            value: 'includeSass',
+            checked: true
+          },
+          {
+            name: 'Bootstrap',
+            value: 'includeBootstrap',
+            checked: true
+          },
+          {
+            name: 'Modernizr',
+            value: 'includeModernizr',
+            checked: true
+          }
+        ]
+      },
+      {
+        type: 'list',
+        name: 'legacyBootstrap',
+        message: 'Which version of Bootstrap would you like to include?',
+        choices: [
+          {
+            name: 'Bootstrap 3',
+            value: true
+          },
+          {
+            name: 'Bootstrap 4',
+            value: false
+          }
+        ],
+        when: answers => answers.features.indexOf('includeBootstrap') !== -1
+      },
+      {
+        type: 'confirm',
+        name: 'includeJQuery',
+        message: 'Would you like to include jQuery?',
+        default: true,
+        when: answers => answers.features.indexOf('includeBootstrap') === -1
+      }
+    ];
 
     return this.prompt(prompts).then(answers => {
       const features = answers.features;
       const hasFeature = feat => features && features.indexOf(feat) !== -1;
 
-      // manually deal with the response, get back and store the results.
+      // Manually deal with the response, get back and store the results.
       // we change a bit this way of doing to automatically do this in the self.prompt() method.
       this.includeSass = hasFeature('includeSass');
       this.includeBootstrap = hasFeature('includeBootstrap');
       this.includeModernizr = hasFeature('includeModernizr');
       this.legacyBootstrap = answers.legacyBootstrap;
       this.includeJQuery = answers.includeJQuery;
-
     });
   }
 
@@ -118,13 +132,13 @@ module.exports = class extends Generator {
       this.templatePath('gulpfile.js'),
       this.destinationPath('gulpfile.js'),
       {
-        date: (new Date).toISOString().split('T')[0],
+        date: new Date().toISOString().split('T')[0],
         name: this.pkg.name,
         version: this.pkg.version,
         includeSass: this.includeSass,
         includeBootstrap: this.includeBootstrap,
         legacyBootstrap: this.legacyBootstrap,
-        includeBabel: this.options['babel'],
+        includeBabel: this.options.babel,
         testFramework: this.options['test-framework']
       }
     );
@@ -136,27 +150,23 @@ module.exports = class extends Generator {
       this.destinationPath('package.json'),
       {
         includeSass: this.includeSass,
-        includeBabel: this.options['babel'],
-        includeJQuery: this.includeJQuery,
+        includeBabel: this.options.babel,
+        includeJQuery: this.includeJQuery
       }
     );
   }
 
   _writingBabel() {
-    this.fs.copy(
-      this.templatePath('babelrc'),
-      this.destinationPath('.babelrc')
-    );
+    this.fs.copy(this.templatePath('babelrc'), this.destinationPath('.babelrc'));
   }
 
   _writingGit() {
-    this.fs.copy(
-      this.templatePath('gitignore'),
-      this.destinationPath('.gitignore'));
+    this.fs.copy(this.templatePath('gitignore'), this.destinationPath('.gitignore'));
 
     this.fs.copy(
       this.templatePath('gitattributes'),
-      this.destinationPath('.gitattributes'));
+      this.destinationPath('.gitattributes')
+    );
   }
 
   _writingBower() {
@@ -167,10 +177,9 @@ module.exports = class extends Generator {
     };
 
     if (this.includeBootstrap) {
-
       // Bootstrap 4
       bowerJson.dependencies = {
-        'bootstrap': '~4.0.0-beta',
+        bootstrap: '~4.0.0-beta',
         'popper.js-unpkg': 'https://unpkg.com/popper.js'
       };
 
@@ -182,7 +191,7 @@ module.exports = class extends Generator {
           };
           bowerJson.overrides = {
             'bootstrap-sass': {
-              'main': [
+              main: [
                 'assets/stylesheets/_bootstrap.scss',
                 'assets/fonts/bootstrap/*',
                 'assets/javascripts/bootstrap.js'
@@ -191,11 +200,11 @@ module.exports = class extends Generator {
           };
         } else {
           bowerJson.dependencies = {
-            'bootstrap': '~3.3.5'
+            bootstrap: '~3.3.5'
           };
           bowerJson.overrides = {
-            'bootstrap': {
-              'main': [
+            bootstrap: {
+              main: [
                 'less/bootstrap.less',
                 'dist/css/bootstrap.css',
                 'dist/js/bootstrap.js',
@@ -205,20 +214,16 @@ module.exports = class extends Generator {
           };
         }
       }
-
     } else if (this.includeJQuery) {
-      bowerJson.dependencies['jquery'] = '~2.1.1';
+      bowerJson.dependencies.jquery = '~2.1.1';
     }
 
     if (this.includeModernizr) {
-      bowerJson.dependencies['modernizr'] = '~2.8.1';
+      bowerJson.dependencies.modernizr = '~2.8.1';
     }
 
     this.fs.writeJSON('bower.json', bowerJson);
-    this.fs.copy(
-      this.templatePath('bowerrc'),
-      this.destinationPath('.bowerrc')
-    );
+    this.fs.copy(this.templatePath('bowerrc'), this.destinationPath('.bowerrc'));
   }
 
   _writingEditorConfig() {
@@ -239,9 +244,7 @@ module.exports = class extends Generator {
       this.destinationPath('app/apple-touch-icon.png')
     );
 
-    this.fs.copy(
-      this.templatePath('robots.txt'),
-      this.destinationPath('app/robots.txt'));
+    this.fs.copy(this.templatePath('robots.txt'), this.destinationPath('app/robots.txt'));
   }
 
   _writingStyles() {
@@ -253,14 +256,10 @@ module.exports = class extends Generator {
       css += '.css';
     }
 
-    this.fs.copyTpl(
-      this.templatePath(css),
-      this.destinationPath('app/styles/' + css),
-      {
-        includeBootstrap: this.includeBootstrap,
-        legacyBootstrap: this.legacyBootstrap
-      }
-    );
+    this.fs.copyTpl(this.templatePath(css), this.destinationPath('app/styles/' + css), {
+      includeBootstrap: this.includeBootstrap,
+      legacyBootstrap: this.legacyBootstrap
+    });
   }
 
   _writingScripts() {
@@ -275,11 +274,11 @@ module.exports = class extends Generator {
   }
 
   _writingHtml() {
-    let bsPath, bsPlugins;
+    let bsPath;
+    let bsPlugins;
 
-    // path prefix for Bootstrap JS files
+    // Path prefix for Bootstrap JS files
     if (this.includeBootstrap) {
-
       // Bootstrap 4
       bsPath = '/bower_components/bootstrap/js/dist/';
       bsPlugins = [
@@ -363,7 +362,7 @@ front end dependencies by running ${chalk.yellow.bold('gulp wiredep')}.`;
       return;
     }
 
-    // wire Bower packages to .html
+    // Wire Bower packages to .html
     wiredep({
       bowerJson: bowerJson,
       directory: 'bower_components',
@@ -373,7 +372,7 @@ front end dependencies by running ${chalk.yellow.bold('gulp wiredep')}.`;
     });
 
     if (this.includeSass) {
-      // wire Bower packages to .scss
+      // Wire Bower packages to .scss
       wiredep({
         bowerJson: bowerJson,
         directory: 'bower_components',

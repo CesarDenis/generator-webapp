@@ -1,20 +1,11 @@
 {
   "name": "generator-webapp",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Scaffold out a front-end web app",
-  "license": "BSD-2-Clause",
-  "repository": "yeoman/generator-webapp",
+  "homepage": "https://github.com/yeoman/generator-webapp",
   "author": "The Yeoman Team",
-  "main": "app/index.js",
-  "engines": {
-    "node": ">=4"
-  },
-  "scripts": {
-    "test": "mocha --reporter spec --timeout 3000"
-  },
-  "files": [
-    "app"
-  ],
+  "files": ["generators"],
+  "main": "generators/app/index.js",
   "keywords": [
     "yeoman-generator",
     "web",
@@ -25,20 +16,60 @@
     "jquery",
     "gulp"
   ],
-  "dependencies": {
-    "chalk": "^1.0.0",
-    "command-exists": "^1.2.2",
-    "generator-jasmine": "^1.0.0",
-    "generator-mocha": "^1.0.0",
-    "mkdirp": "^0.5.1",
-    "underscore.string": "^3.1.1",
-    "wiredep": "^4.0.0",
-    "yeoman-generator": "^1.1.1",
-    "yosay": "^2.0.0"
-  },
   "devDependencies": {
-    "mocha": "^3.1.0",
-    "yeoman-assert": "^3.0.0",
-    "yeoman-test": "^1.6.0"
-  }
+    "coveralls": "^2.13.1",
+    "eslint": "^4.1.0",
+    "eslint-config-prettier": "^2.4.0",
+    "eslint-config-xo": "^0.18.2",
+    "eslint-plugin-prettier": "^2.6.0",
+    "husky": "^0.14.3",
+    "jest": "^22.0.6",
+    "lint-staged": "^4.2.1",
+    "nsp": "^2.6.3",
+    "prettier": "^1.7.0",
+    "yeoman-assert": "^3.1.0",
+    "yeoman-test": "^1.7.0"
+  },
+  "dependencies": {
+    "chalk": "^2.1.0",
+    "command-exists": "^1.2.2",
+    "generator-jasmine": "^2.0.0",
+    "generator-mocha": "^2.0.0",
+    "mkdirp": "^0.5.1",
+    "underscore.string": "^3.3.4",
+    "wiredep": "^4.0.0",
+    "yeoman-generator": "^2.0.1",
+    "yosay": "^2.0.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "scripts": {
+    "prepublish": "nsp check",
+    "pretest": "eslint .",
+    "precommit": "lint-staged",
+    "test": "jest"
+  },
+  "lint-staged": {
+    "*.js": ["eslint --fix", "git add"]
+  },
+  "eslintConfig": {
+    "extends": ["xo", "prettier"],
+    "env": {
+      "jest": true,
+      "node": true
+    },
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "singleQuote": true,
+          "printWidth": 90
+        }
+      ]
+    },
+    "plugins": ["prettier"]
+  },
+  "repository": "yeoman/generator-webapp",
+  "license": "BSD-2-Clause-FreeBSD"
 }
