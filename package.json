@@ -51,8 +51,12 @@
     "test": "jest"
   },
   "lint-staged": {
+<<<<<<< HEAD
     "*.js": ["eslint --fix", "git add"],
     "*.json": ["prettier --write", "git add"]
+=======
+    "*.js": ["eslint --fix", "git add"]
+>>>>>>> master
   },
   "eslintConfig": {
     "extends": ["xo", "prettier"],
